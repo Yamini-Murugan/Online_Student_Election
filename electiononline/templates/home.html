@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+Homepage{% endblock%}
+
+{% block home%}
+<div class="container-fluid">
+    <!-- Hero Section -->
+    <section class="hero">
+      
+    <div lc-helper="background" class="container-fluid py-5 mb-4 d-flex justify-content-center" style="  background-image: url('https://images.unsplash.com/photo-1604451372323-158c45058d10?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-position: center;
+background-size:cover;
+background-repeat:no-repeat">
+        <div class="p-5 mb-4 lc-block col-xxl-7 col-lg-8 col-12" style=" backdrop-filter: blur(6px) saturate(102%);
+    -webkit-backdrop-filter: blur(6px) saturate(102%);
+    background-color: rgba(255, 255, 255, 0.45);
+    border-radius: 12px;
+    border: 1px solid rgba(209, 213, 219, 0.3);">
+            <div class="lc-block">
+                <div editable="rich">
+                    <h2 class="fw-bolder display-3">Cast Your Ballot!</h2>
+                </div>
+            </div>
+            <div class="lc-block col-md-8">
+                <div editable="rich">
+                    <p class="lead">Empower your voice, shape our campus. Vote in the student election and make your mark on our future!
+                    </p>
+                </div>
+            </div>
+            <div class="lc-block">
+                <div class="card-footer">
+                    {% if user.username == 'admin' %} <!-- Assuming admin_logged_in is a variable indicating whether the admin is logged in -->
+                      <a href="{%url 'adminadd'%}" class="btn btn-primary">Add Position/Candidates</a> <!-- Link to the add_position_candidates view -->
+                    {% else %}
+                    <a href="#card-section" class="btn btn-primary">Vote</a> 
+                    {% endif %}
+                  </div>
+            </div>
+        </div>
+    </div>
+
+    </section>
+  
+    <section class="card-section" id="card-section">
+        <div class="container mt-5">
+          <div class="row justify-content-center">
+            <div class="col-md-12 text-center mb-4">
+              <h1 class="mb-0">Candidate Information</h1>
+            </div>
+          </div>
+          <div class="row justify-content-center mt-5">
+            {% for position in positions %}
+            <!-- Card for each position -->
+            <div class="col-md-4"> 
+              <div class="card mb-4">
+                <div class="card-body">
+                    {% if user.username == 'admin' %}
+                    <a href="{% url 'update' position.pk %}" class="btn btn-sm btn-warning mr-2"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'delete' position.pk %}" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                    {%endif%}
+                  <h5 class="card-title">{{ position.name }}</h5>
+                  <ul class="list-group list-group-flush">
+                    {% for candidate in position.candidates.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      {{ candidate.name }}
+                      {% if user.is_authenticated and user.is_staff %}
+    <span class="badge bg-secondary candidate-votes">{{ candidate.votes }}</span>
+{% endif %}
+                      <div>
+                        
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                <div class="card-footer">
+                    {% if user.is_authenticated and not user.is_staff %}
+                    <a href="{% url 'vote' position.id %}" class="btn btn-primary">Vote</a>
+{%endif%}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      
+      
+  
+  
+  
+{% endblock %}

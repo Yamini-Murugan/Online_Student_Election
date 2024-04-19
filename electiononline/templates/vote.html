@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block vote %}
+<div class="box">
+    <h1>Vote for Your Candidates</h1>
+    <form method="post" action="{% url 'submit_vote' %}">
+        {% csrf_token %}
+        <input type="hidden" name="position_id" value="{{ candidates.0.position_id }}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Candidate Name</th>
+                    <th scope="col">Vote</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidate in candidates %}
+                <tr>
+                    <td>{{ candidate.name }}</td>
+                    <td><input type="radio" name="candidates" value="{{ candidate.id }}"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Vote</button>
+    </form>
+</div>
+{% endblock %}

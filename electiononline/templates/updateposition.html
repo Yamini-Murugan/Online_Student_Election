@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+Update Position{% endblock%}
+
+{% block updateposition%}
+<div class="box">
+    <h1 class="text-center mt-5">Positions and Candidates</h1>
+    
+    <form method="post" action="#" class="mt-4">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="position_name" class="form-label">Position Name:</label>
+        <input type="text" class="form-control" id="position_name" value="{{ position.name }}" name="position_name">
+      </div>
+      <div class="mb-3">
+        <label for="candidate_names" class="form-label">Candidate Names (comma-separated):</label>
+        <input type="text" class="form-control" id="candidate_names" name="candidate_names" value="{% for candidate in position.candidates.all %}{{ candidate.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    {%endblock%}
